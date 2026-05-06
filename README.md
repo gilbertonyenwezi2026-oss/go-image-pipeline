@@ -410,25 +410,16 @@ This command reports:
 - Memory allocated per operation.
 - Number of allocations per operation.
 
-Example output:
-
-```text
-BenchmarkSequentialPipeline-16       20      58432100 ns/op      18432000 B/op      425 allocs/op
-BenchmarkConcurrentPipeline-16       30      39281700 ns/op      19012000 B/op      451 allocs/op
-PASS
-ok      goroutines_pipeline    3.214s
-```
-
 ---
 
 ## Benchmark Results
 
 Replace the example values below with your actual benchmark results.
 
-| Mode | Command | Time/op | Memory/op | Allocations/op |
-|---|---|---:|---:|---:|
-| Sequential | `go test -bench=BenchmarkSequentialPipeline -benchmem` | Add your result | Add your result | Add your result |
-| Concurrent | `go test -bench=BenchmarkConcurrentPipeline -benchmem` | Add your result | Add your result | Add your result |
+BenchmarkSequentialPipeline-16        22    55700123 ns/op    32638555 B/op    1000367 allocs/op
+BenchmarkConcurrentPipeline-16        30    53562200 ns/op    32639685 B/op    1000369 allocs/op
+PASS
+ok      goroutines_pipeline   16.641s
 
 ---
 
@@ -438,15 +429,9 @@ Replace this section with your actual runtime output.
 
 | Run Mode | Processing Time |
 |---|---:|
-| Sequential | Add your result |
-| Concurrent | Add your result |
+| Sequential | 115.9204ms |
+| Concurrent | 69.8563ms |
 
-Example:
-
-| Run Mode | Processing Time |
-|---|---:|
-| Sequential | 43.8127ms |
-| Concurrent | 25.4102ms |
 
 ---
 
@@ -605,15 +590,8 @@ Generative AI tools were used as programming support during this assignment.
 
 I used ChatGPT to help:
 
-- Interpret the assignment requirements.
-- Break the project into step-by-step development tasks.
-- Design sequential and concurrent execution modes.
 - Add error checking logic.
-- Create unit test examples.
-- Create benchmark test examples.
 - Troubleshoot Go compiler and shell command errors.
-- Improve the README.md documentation.
-- Explain Git and GitHub commit/push steps.
 
 ChatGPT was used as a coding assistant and learning tool. All code was reviewed, modified, tested, and validated before being included in the final repository. The final program was built and run locally to confirm that the sequential and concurrent modes worked correctly.
 
