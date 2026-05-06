@@ -416,10 +416,14 @@ This command reports:
 
 Replace the example values below with your actual benchmark results.
 
-BenchmarkSequentialPipeline-16        22    55700123 ns/op    32638555 B/op    1000367 allocs/op
-BenchmarkConcurrentPipeline-16        30    53562200 ns/op    32639685 B/op    1000369 allocs/op
+
+| Mode | Command | Time/op | Memory/op | Allocations/op |
+|---|---|---:|---:|---:|
+| Sequential | `go test -bench=BenchmarkSequentialPipeline -benchmem` | 55700123 ns/op | 32638555 B/op | 1000367 allocs/op |
+| Concurrent | `go test -bench=BenchmarkConcurrentPipeline -benchmem` | 53562200 ns/op | 32639685 B/op | 1000369 allocs/op |
 PASS
 ok      goroutines_pipeline   16.641s
+
 
 ---
 
