@@ -161,8 +161,60 @@ func runSequential(paths []string) error {
 	return nil
 }
 
+func runComparisonLoop(imagePaths []string, runs int) error {
+	var totalSequential time.Duration
+	var totalConcurrent time.Duration
+
+	fmt.Printf("Running sequential and concurrent pipelines %d times...\n\n", runs)
+
+	for i := 1; i <= runs; i++ {
+		seqStart := time.Now()
+
+		if err := runSequential(imagePaths); err != nil {
+			return fmt.Errorf("sequential run %d failed: %w", i, err)
+		}
+
+		seqElapsed := time.Since(seqStart)
+		totalSequential += seqElapsed
+
+		conStart := time.Now()
+
+		if err := runConcurrent(imagePaths); err != nil {
+			return fmt.Errorf("concurrent run %d failed: %w", i, err)
+		}
+
+		conElapsed := time.Since(conStart)
+		totalConcurrent += conElapsed
+
+		if i%100 == 0 {
+			fmt.Printf("Completed %d runs...\n", i)
+		}
+	}
+
+	avgSequential := totalSequential / time.Duration(runs)
+	avgConcurrent := totalConcurrent / time.Duration(runs)
+
+	fmt.Println("\nProcessing Time Comparison")
+	fmt.Println("--------------------------")
+	fmt.Printf("Total runs: %d\n", runs)
+	fmt.Printf("Sequential total time: %v\n", totalSequential)
+	fmt.Printf("Concurrent total time: %v\n", totalConcurrent)
+	fmt.Printf("Sequential average time: %v\n", avgSequential)
+	fmt.Printf("Concurrent average time: %v\n", avgConcurrent)
+
+	if totalConcurrent < totalSequential {
+		improvement := float64(totalSequential-totalConcurrent) / float64(totalSequential) * 100
+		fmt.Printf("Concurrent was faster by %.2f%%\n", improvement)
+	} else {
+		difference := float64(totalConcurrent-totalSequential) / float64(totalSequential) * 100
+		fmt.Printf("Sequential was faster by %.2f%%\n", difference)
+	}
+
+	return nil
+}
+
 func main() {
-	mode := flag.String("mode", "concurrent", "processing mode: concurrent or sequential")
+	mode := flag.String("mode", "concurrent", "processing mode: concurrent, sequential, compare, or compare1000")
 	flag.Parse()
 
 	imagePaths := []string{
@@ -178,11 +230,30 @@ func main() {
 
 	switch *mode {
 	case "concurrent":
+		start := time.Now()
 		err = runConcurrent(imagePaths)
+		elapsed := time.Since(start)
+
+		if err == nil {
+			fmt.Printf("\nMode: concurrent\n")
+			fmt.Printf("Processing time: %v\n", elapsed)
+		}
+
 	case "sequential":
+		start := time.Now()
 		err = runSequential(imagePaths)
+		elapsed := time.Since(start)
+
+		if err == nil {
+			fmt.Printf("\nMode: sequential\n")
+			fmt.Printf("Processing time: %v\n", elapsed)
+		}
+
+	case "compare1000":
+		err = runComparisonLoop(imagePaths, 1000)
+
 	default:
-		err = fmt.Errorf("invalid mode %q: use concurrent or sequential", *mode)
+		err = fmt.Errorf("invalid mode %q: use concurrent, sequential, or compare1000", *mode)
 	}
 
 	elapsed := time.Since(start)

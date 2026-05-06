@@ -414,38 +414,42 @@ This command reports:
 
 ## Benchmark Results
 
-Replace the example values below with your actual benchmark results.
+
+| Benchmark | Runs Observed | Average Time/op | Memory/op | Allocations/op |
+|---|---:|---:|---:|---:|
+| Pipeline Benchmark | 3 | 51.31 ms/op | 32.64 MB/op | ~1,000,366 allocs/op |
 
 
-| Mode | Command | Time/op | Memory/op | Allocations/op |
-|---|---|---:|---:|---:|
-| Sequential | `go test -bench=BenchmarkSequentialPipeline -benchmem` | 55700123 ns/op | 32638555 B/op | 1000367 allocs/op |
-| Concurrent | `go test -bench=BenchmarkConcurrentPipeline -benchmem` | 53562200 ns/op | 32639685 B/op | 1000369 allocs/op |
-PASS
-ok      goroutines_pipeline   16.641s
+
+| Value               | Meaning                          | README-friendly version |
+| ------------------- | -------------------------------- | ----------------------: |
+| `20`                | Go ran the benchmark 20 times    |           20 iterations |
+| `50486330 ns/op`    | Average time per operation       |         **50.49 ms/op** |
+| `32638666 B/op`     | Memory used per operation        |         **32.64 MB/op** |
+| `1000366 allocs/op` | Memory allocations per operation | **1,000,366 allocs/op** |
 
 
 ---
 
 ## Processing Time Comparison
 
-Replace this section with your actual runtime output.
+The program was executed in `compare1000` mode to compare the sequential and concurrent image-processing pipelines over 1,000 runs.
 
-| Run Mode | Processing Time |
-|---|---:|
-| Sequential | 115.9204ms |
-| Concurrent | 69.8563ms |
+| Run Mode | Total Time for 1,000 Runs | Average Time per Run |
+|---|---:|---:|
+| Sequential | 1m47.459386s | 107.459386ms |
+| Concurrent | 1m1.1333911s | 61.133391ms |
 
 
 ---
 
 ## Interpretation of Results
 
-The concurrent pipeline is expected to perform better when the workload is large enough to benefit from overlapping work across multiple goroutines. In this project, concurrency allows multiple pipeline stages to operate at the same time.
+The concurrent pipeline completed the 1,000-run comparison faster than the sequential pipeline. The sequential version required approximately 107.46 milliseconds per run, while the concurrent version required approximately 61.13 milliseconds per run. Overall, the concurrent version was faster by 43.11%.
 
-However, concurrency is not always automatically faster. For small images or small workloads, the overhead of creating goroutines and passing data through channels may reduce or eliminate performance gains. For larger image sets or more computationally expensive transformations, the concurrent pipeline is more likely to show stronger throughput improvement.
+This result suggests that Go’s goroutines and channels improved throughput for this image-processing workload. The improvement is meaningful because the concurrent design allowed multiple pipeline stages to operate in overlapping time rather than forcing each image to complete all processing steps before the next image began.
 
-The benchmark results provide a more reliable comparison than a single program run because benchmarks repeat the operation multiple times and report average performance.
+The final reported `compare1000` processing time was 2m48.5942955s. This value represents the full wall-clock time for the entire comparison run, including both sequential and concurrent executions, loop overhead, console output, and file input/output operations.
 
 ---
 
